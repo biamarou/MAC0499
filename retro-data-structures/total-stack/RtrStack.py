@@ -52,5 +52,4 @@ def tester ():
             method_to_call(int(command[1]))
         elif(args == 2):
             method_to_call(int(command[1]), int(command[2]))
-
 tester() 

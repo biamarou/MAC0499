@@ -45,11 +45,11 @@ def tester ():
         except:
             print("Finalizando...")
             quit()
-        
+
         command = command.split()
         args = len(command) - 1
         method_to_call = getattr(retro_strc, command[0])
-        
+
         if (args == 0):
             method_to_call()
         elif (args == 1):
@@ -57,7 +57,7 @@ def tester ():
         elif(args == 2):
             method_to_call(int(command[1]), int(command[2]))
 
-tester() 
+tester()
 
 # caso teste (-inf por causa do max_after_bridge)
 #   insert_insert 10 7
