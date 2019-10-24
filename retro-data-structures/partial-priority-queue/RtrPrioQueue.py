@@ -20,15 +20,15 @@ class RtrPrioQueue:
             self.q_now.insert(value[1])
         else:
             self.q_now.delete(value[1])
-        
-    def min (self):
+
+    def query_min (self):
         min_key = self.q_now.min()
         print(min_key)
         return min_key
-    
+
     def print_heap (self):
         self.updates.print()
-    
+
     def print_qnow (self):
         self.q_now.print()
 
