@@ -19,9 +19,8 @@ class PartialQueue (object):
 
     def delete_enqueue(self, t):
         node = self.time_tree.search_node(t)
-        if (node is None):
-            cell = None
-        else:
+        cell = None
+        if (node):
             cell = node.ref
         self.enqueue_list.delete(t, cell, True)
         self.time_tree.delete(t)
