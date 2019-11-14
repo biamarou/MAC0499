@@ -1,7 +1,6 @@
 from stack_avl_tree import AVL
 
 class RtrStack:
-    
     def __init__(self):
         self.stack_avl = AVL()
 
@@ -13,7 +12,7 @@ class RtrStack:
 
     def delete_push (self, t):
         self.stack_avl.delete(t, 1)
-    
+
     def delete_pop (self, t):
         self.stack_avl.delete(t, -1)
 
@@ -22,11 +21,9 @@ class RtrStack:
 
     def kth (self, t, k):
         self.stack_avl.kth(t, k)
-        
+
     def debug_print (self):
         self.stack_avl.print()
-        
-
 
 # função interativa para testar a estrutura
 def tester ():
@@ -41,15 +38,15 @@ def tester ():
         except:
             print("Finalizando...")
             quit()
-        
+
         command = command.split()
         args = len(command) - 1
         method_to_call = getattr(retro_strc, command[0])
-        
+
         if (args == 0):
             method_to_call()
         elif (args == 1):
             method_to_call(int(command[1]))
         elif(args == 2):
             method_to_call(int(command[1]), int(command[2]))
-tester() 
+tester()

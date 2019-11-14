@@ -1,7 +1,6 @@
 from queue_avl_tree import AVL
 
 class RetroQueue(object):
-    
     def __init__(self):
         self.enqueue_tree = AVL()
         self.dequeue_tree = AVL()
@@ -14,13 +13,13 @@ class RetroQueue(object):
 
     def delete_enqueue (self, t):
         self.enqueue_tree.delete(t)
-    
+
     def delete_dequeue (self, t):
         self.dequeue_tree.delete(t)
 
     def query_kth (self, t, k):
         c = self.dequeue_tree.count(t)
-        kth = self.enqueue_tree.kth(c + k)
+        kth = self.enqueue_tree.kth(t, c + k)
         print(kth)
         return(kth)
 
@@ -46,11 +45,11 @@ def tester ():
         except:
             print("Finalizando...")
             quit()
-        
+
         command = command.split()
         args = len(command) - 1
         method_to_call = getattr(retro_strc, command[0])
-        
+
         if (args == 0):
             method_to_call()
         elif (args == 1):
@@ -58,4 +57,4 @@ def tester ():
         elif(args == 2):
             method_to_call(int(command[1]), int(command[2]))
 
-tester() 
+tester()

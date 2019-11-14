@@ -151,9 +151,9 @@ class AVL:
         if (top_sum <= 0): node.top = 0
         else: node.top = top_sum
 
-        if (w != -1):
-            if (node.max_out[1] < v and w == 1): node.max_out = [t, v]
-            elif (node.min_in[1] > v and w == 0): node.min_in = [t, v]
+        #if (w != -1): doesn't seem necessary
+        if (node.max_out[1] < v and w == 1): node.max_out = [t, v] #
+        elif (node.min_in[1] > v and w == 0): node.min_in = [t, v] #
 
         node.weight = node.left.weight + node.right.weight
         node.size = 1 + self._size(node.left) + self._size(node.right)
@@ -201,7 +201,8 @@ class AVL:
         elif (t_bridge < node.min_right_time):
             rtr = self._max_after_bridge(node.left, t_bridge)
 
-            if (node.right.leaf and node.right.weight == 1 and node.right.value > rtr[1]):
+            if (node.right.leaf and node.right.weight == 1 and
+                node.right.value > rtr[1]):
                 rtr = [node.right.time, node.right.value]
             elif (not node.right.leaf and node.right.max_out[1] > rtr[1]):
                 rtr = node.right.max_out
@@ -228,7 +229,8 @@ class AVL:
         else:
             rtr = self._min_before_bridge(node.right, t_bridge)
 
-            if (node.left.leaf and node.left.value < rtr[1] and node.left.weight == 0):
+            if (node.left.leaf and node.left.value < rtr[1] and
+                node.left.weight == 0):
                 rtr = [node.left.time, node.left.value]
             elif (not node.left.leaf and node.left.min_in[1] < rtr[1]):
                 rtr = node.left.min_in
@@ -423,7 +425,8 @@ class AVL:
             if (node.min_right_time == t):
                 node.min_right_time = self._min(node.right)
             node.size = 1 + self._size(node.left) + self._size(node.right)
-            node.height = 1 + max(self._height(node.left), self._height(node.right))
+            node.height = 1 + max(self._height(node.left),
+                                  self._height(node.right))
             return self._balance(node)
 
     def min (self):

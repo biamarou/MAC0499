@@ -9,7 +9,7 @@ class AVL(object):
             self.height = h
             self.size = s
             self.is_leaf = False
-    
+
     class Leaf(object):
         def __init__(self, t, v):
             self.time = t
@@ -41,23 +41,23 @@ class AVL(object):
             self.root = self._insert(self.root, t, v)
 
     def _insert(self, node, t, v):
-        
+
         if (node.is_leaf):
-            new_leaf = self.Leaf(t, v)   
-            
+            new_leaf = self.Leaf(t, v)
+
             if(t < node.time):
                 new_node = self.Node(t, 2, new_leaf, node, 0, 1)
             else:
                 new_node = self.Node(node.time, 2, node, new_leaf, 0, 1)
-            
+
             return new_node
 
         elif (t < node.min_right_time):
             node.left = self._insert(node.left, t, v)
-            
+
         else:
             node.right = self._insert(node.right, t, v)
-        
+
         node.leafs += 1
         node.size = 1 + self._size(node.left) + self._size(node.right)
         node.height = 1 + max(self._height(node.left), self._height(node.right))
@@ -70,17 +70,17 @@ class AVL(object):
         if (self._balance_factor(node) < -1):
             if (self._balance_factor(node.right) > 0):
                 node.right = self._rotate_right(node.right)
-            
+
             node = self._rotate_left(node)
 
         elif (self._balance_factor(node) > 1):
             if (self._balance_factor(node.left) < 0):
                 node.left = self._rotate_left(node.left)
-            
+
             node = self._rotate_right(node)
 
         return node
-            
+
     def _rotate_left (self, node):
         node_tmp = node.right
         node.right = node_tmp.left
@@ -108,22 +108,22 @@ class AVL(object):
             self.root = self._delete(self.root, t)
 
     def _delete (self, node, t):
-        
+
         if (node.is_leaf): return None
-            
+
         elif (t <= node.min_right_time):
             node.left = self._delete(node.left, t)
-            
+
             if (node.left is None):
                 node = node.right
             else:
                 node.leafs -= 1
-            
+
         else:
             node.right = self._delete(node.right, t)
-            
+
             if (node.right is None):
-                node = node.left  
+                node = node.left
             else:
                 node.leafs -= 1
 
@@ -136,28 +136,6 @@ class AVL(object):
             node.height = 1 + max(self._height(node.left), self._height(node.right))
             return self._balance(node)
 
-    def min (self):
-        if (self.root is not None):
-            return self._min(self.root)
-        return 0
-
-    def _min (self, node):
-        if (node.is_leaf):
-            return node.time
-
-        return self._min(node.left)
-
-    def max (self):
-        if (self.root is not None):
-            return self._max(self.root)
-        return 0
-
-    def _max (self, node):
-        if (node.is_leaf):
-            return node.time
-
-        return self._max(node.right)
-    
     def count (self, t):
         if (self.root is not None):
             return self._count(self.root, t, 0)
@@ -165,14 +143,13 @@ class AVL(object):
 
     def _count (self, node, t, counter):
         if (node.is_leaf):
-            # remover linhas 174-175 se quiser excluir o próprio instante buscado
             if (node.time <= t):
                 counter += 1
             return counter
-        
+
         elif (t < node.min_right_time):
             return self._count(node.left, t, counter)
-        
+
         else:
             if (node.left.is_leaf):
                 counter += 1
@@ -182,39 +159,31 @@ class AVL(object):
 
     def kth (self, t, k):
         if (not self.root.is_leaf and self.root.leafs < k):
-            return
-        kth = self._kth(self.root, k)
-        return(kth)
+            return None
+        node = self._kth(self.root, k)
+        if (node.time > t):
+            return None
+        return node.value
 
-    def _kth (self, node, t, k):
+    def _kth (self, node, k):
         if (node.is_leaf):
-            return node.value
+            return node
 
-        elif (node.min_right_time < t):
-            return self._kth(node.left, t, k)
+        elif (node.left.is_leaf):
+            if (k == 1):
+                return self._kth(node.left, k)
+            return self._kth(node.right, k - 1)
 
         else:
-            if ()
-        
-
-    def biggest_minor (self, t):
-        return self._biggest_minor (self.root, t, 0)
-
-    def _biggest_minor (self, node, t, n):
-        if (node.is_leaf): 
-            if (node.time > t): return n
-            return node.time
-
-        elif (t < node.min_right_time):
-            return self._biggest_minor (node.left, t, n)
-        elif (t > node.min_right_time):
-            return self._biggest_minor(node.right, t, node.min_right_time)
+            if (k > node.left.leafs):
+                return self._kth(node.right, k - node.left.leafs)
+            return self._kth(node.left, k)
 
     def is_inside (self, t):
         return self._is_inside (self.root, t)
 
     def _is_inside (self, node, t):
-        if (node.is_leaf): 
+        if (node.is_leaf):
             if (node.time == t): return [True, node.value]
             return [False, None]
 
@@ -229,27 +198,13 @@ class AVL(object):
 
     def _print (self, node, i):
         if (node is None): return
-        
+
         if (node.is_leaf):
-            print(i * ' ' + 'leaf ' + str(node.time) + ' ' + str(node.value))        
+            print(i * ' ' + 'leaf ' + str(node.time) +
+                  ' ' + str(node.value))
             return
 
         self._print(node.left, i + 1)
-        print(i * ' ' + 'node ' + str(node.min_right_time) + ' ' + str(node.leafs))
+        print(i * ' ' + 'node ' + str(node.min_right_time) +
+              ' ' + str(node.leafs))
         self._print(node.right, i + 1)
-
-"""
-def _kth (self, node, t, k):
-        if (node.is_leaf):
-            return node.value
-
-        elif (node.left.is_leaf):
-            if (k == 1):
-                return self._kth(node.left, k)
-            return self._kth(node.right, k - 1)
-        
-        else:
-            if (k > node.left.leafs):
-                return self._kth(node.right, k - node.left.leafs)
-            return self._kth(node.left, k)
-"""

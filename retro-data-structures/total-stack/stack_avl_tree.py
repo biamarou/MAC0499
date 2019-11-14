@@ -76,7 +76,8 @@ class AVL:
 
         node.weight += w
         node.size = 1 + self._size(node.left) + self._size(node.right)
-        node.height = 1 + max(self._height(node.left), self._height(node.right))
+        node.height = 1 + max(self._height(node.left),
+                              self._height(node.right))
         return self._balance(node)
 
     def _balance_factor (self, node):
@@ -183,7 +184,8 @@ class AVL:
             if (node.min_right_time == t):
                 node.min_right_time = self._min(node.right) # chamado so uma vez por delete
             node.size = 1 + self._size(node.left) + self._size(node.right)
-            node.height = 1 + max(self._height(node.left), self._height(node.right))
+            node.height = 1 + max(self._height(node.left),
+                                  self._height(node.right))
             return self._balance(node)
 
     def min (self):
@@ -196,16 +198,6 @@ class AVL:
             return node.time
 
         return self._min(node.left)
-
-    def max (self):
-        if (self.root != None):
-            return self._max(self.root)
-        return 0
-
-    def _max (self, node):
-        if (node.leaf):
-            return node.time
-        return self._max(node.right)
 
     def weight_count (self, t):
         if (self.root != None):

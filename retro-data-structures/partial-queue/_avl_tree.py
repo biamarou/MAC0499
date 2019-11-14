@@ -132,15 +132,6 @@ class AVL(object):
             return node
         return self._min(node.left)
 
-    def max (self):
-        if (self.root is not None):
-            return self._max(self.root)
-
-    def _max (self, node):
-        if (node.right is None):
-            return node
-        return self._max(node.right)
-
     def print (self):
         self._print(self.root, 0)
 
