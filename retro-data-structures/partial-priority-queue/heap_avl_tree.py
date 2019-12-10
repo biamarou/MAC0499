@@ -5,7 +5,7 @@ class AVL:
     class Node:
         def __init__(self, t, o, w, max_, min_, l, r, h, s):
             self.min_right_time = t
-            self.top = o
+            self.leftover = o
             self.weight = w
             self.max_out = max_ # maximo valor fora de Qnow (weight = 1)
             self.min_in = min_  # minimo valor em Qnow (weight = 0)
@@ -24,8 +24,8 @@ class AVL:
             self.value = v
             self.weight = w
 
-            if (w == -1 or w == 0): self.top = 0
-            else: self.top = 1
+            if (w == -1 or w == 0): self.leftover = 0
+            else: self.leftover = 1
             self.leaf = True
 
     def __init__(self):
@@ -147,9 +147,9 @@ class AVL:
         else:
             node.right = self._insert(node.right, t, v, w)
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        top_sum = node.left.leftover + node.right.weight
+        if (top_sum <= 0): node.leftover = 0
+        else: node.leftover = top_sum
 
         #if (w != -1): doesn't seem necessary
         if (node.max_out[1] < v and w == 1): node.max_out = [t, v] #
@@ -312,13 +312,13 @@ class AVL:
         node.weight = node.left.weight + node.right.weight
         node_tmp.weight = node_tmp.left.weight + node_tmp.right.weight
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        top_sum = node.left.leftover + node.right.weight
+        if (top_sum <= 0): node.leftover = 0
+        else: node.leftover = top_sum
 
-        top_sum = node_tmp.left.top + node_tmp.right.weight
-        if (top_sum <= 0): node_tmp.top = 0
-        else: node_tmp.top = top_sum
+        top_sum = node_tmp.left.leftover + node_tmp.right.weight
+        if (top_sum <= 0): node_tmp.leftover = 0
+        else: node_tmp.leftover = top_sum
 
         node_tmp.left.max_out = self.set_new_max_out(node_tmp.left)
         node_tmp.max_out = self.set_new_max_out(node_tmp)
@@ -344,13 +344,13 @@ class AVL:
         node.weight = node.left.weight + node.right.weight
         node_tmp.weight = node_tmp.left.weight + node_tmp.right.weight
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        top_sum = node.left.leftover + node.right.weight
+        if (top_sum <= 0): node.leftover = 0
+        else: node.leftover = top_sum
 
-        top_sum = node_tmp.left.top + node_tmp.right.weight
-        if (top_sum <= 0): node_tmp.top = 0
-        else: node_tmp.top = top_sum
+        top_sum = node_tmp.left.leftover + node_tmp.right.weight
+        if (top_sum <= 0): node_tmp.leftover = 0
+        else: node_tmp.leftover = top_sum
 
         node_tmp.right.max_out = self.set_new_max_out(node_tmp.right)
         node_tmp.max_out = self.set_new_max_out(node_tmp)
@@ -403,9 +403,9 @@ class AVL:
                 node = node.right
             else:
                 node.weight -= w
-                top_sum = node.left.top + node.right.weight
-                if (top_sum <= 0): node.top = 0
-                else: node.top = top_sum
+                top_sum = node.left.leftover + node.right.weight
+                if (top_sum <= 0): node.leftover = 0
+                else: node.leftover = top_sum
 
         else:
             node.right = self._delete(node.right, t, w)
@@ -415,9 +415,9 @@ class AVL:
 
             else:
                 node.weight = node.left.weight + node.right.weight
-                top_sum = node.left.top + node.right.weight
-                if (top_sum <= 0): node.top = 0
-                else: node.top = top_sum
+                top_sum = node.left.leftover + node.right.weight
+                if (top_sum <= 0): node.leftover = 0
+                else: node.leftover = top_sum
 
         if (node.leaf):
             return node
@@ -486,7 +486,7 @@ class AVL:
             kth_right = self._kth(node.right, t, k)
             if (kth_right[0] == None):
                 k -= kth_right[1]
-                if (node.left.top >= k):
+                if (node.left.leftover >= k):
                     return self.get_value(node.left, k)
                 else:
                     return [None, kth_right[1] + node.left.weight]
@@ -500,7 +500,7 @@ class AVL:
         if (node.leaf):
             return [node, None]
 
-        elif (node.right.top >= k):
+        elif (node.right.leftover >= k):
             rtr_right = self.get_value(node.right, k)
             if (rtr_right[1] == None):
                 rtr_right[1] = self._max(node.left)
@@ -524,7 +524,7 @@ class AVL:
             kth_left = self._reverse_kth(node.left, t, k)
             if (kth_left[0] == None):
                 k -= kth_left[1]
-                if (node.right.top == 0 and -node.right.weight >= k):
+                if (node.right.leftover == 0 and -node.right.weight >= k):
                     return self.reverse_get_value(node.right, k)
                 else:
                     return [None, kth_left[1] - node.right.weight]
@@ -535,7 +535,7 @@ class AVL:
         if (node.leaf):
             return [node.time]
 
-        elif (node.left.top == 0 and -node.left.weight >= k):
+        elif (node.left.leftover == 0 and -node.left.weight >= k):
             return self.reverse_get_value(node.left, k)
 
         else:

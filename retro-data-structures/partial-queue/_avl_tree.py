@@ -118,7 +118,7 @@ class AVL(object):
         if (t < node.ref.time):
             if (node.left is not None):
                 return self._search(node.left, t)
-        elif (t > node.ref.time):
+        else:
             if (node.right is not None):
                 return self._search(node.right, t)
         return node
@@ -139,5 +139,6 @@ class AVL(object):
         if (node is None): return
 
         self._print(node.left, i + 1)
-        print(i * ' ' + 'node ' + str(node.ref.time) + ' ' + str(node.ref.value))
+        print(i * ' ' + 'node ' + str(node.ref.time) + ' '+
+              str(node.ref.value))
         self._print(node.right, i + 1)

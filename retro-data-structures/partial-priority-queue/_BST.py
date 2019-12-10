@@ -61,6 +61,8 @@ class _BST:
             return self.PRV_contains(node.right, k)
 
     def min (self):
+        if (self.root is None):
+            return None
         return self.PRV_min(self.root)
 
     def PRV_min (self, node):

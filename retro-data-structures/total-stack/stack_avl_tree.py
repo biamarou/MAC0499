@@ -3,13 +3,13 @@ class AVL:
     class Node:
         def __init__(self, t, o, w, l, r, h, s):
             self.min_right_time = t
-            self.top = o
+            self.leftover = o
             self.weight = w
             self.left = l
             self.right = r
             self.height = h
             self.size = s      # número de nós internos na subárvore
-            self.leaf = False
+            self.is_leaf = False
 
     class Leaf:
         def __init__(self, t, v, w):
@@ -17,9 +17,9 @@ class AVL:
             self.value = v
             self.weight = w
 
-            if (w == -1): self.top = 0
-            else: self.top = 1
-            self.leaf = True
+            if (w == -1): self.leftover = 0
+            else: self.leftover = 1
+            self.is_leaf = True
 
     def __init__(self):
         self.root = None
@@ -28,14 +28,14 @@ class AVL:
         return self._size(self.root)
 
     def _size (self, node):
-        if (node.leaf): return 0
+        if (node.is_leaf): return 0
         else: return node.size
 
     def height (self):
         return self._height(self.root)
 
     def _height (self, node):
-        if (node.leaf): return -1
+        if (node.is_leaf): return -1
         else: return node.height
 
     def insert (self, t, v, w):
@@ -45,22 +45,22 @@ class AVL:
             self.root = self._insert(self.root, t, v, w)
 
     def _insert(self, node, t, v, w):
-        if (node.leaf):
+        if (node.is_leaf):
             new_leaf = self.Leaf(t, v, w)
             w_sum = node.weight + w
 
             if(t < node.time):
-                if (w < node.weight): top = 1
-                elif (w == node.weight and w > 0): top = 2
-                else: top = 0
+                if (w < node.weight): leftover = 1
+                elif (w == node.weight and w > 0): leftover = 2
+                else: leftover = 0
 
-                new_node = self.Node(node.time, top, w_sum, new_leaf, node, 0, 1)
+                new_node = self.Node(node.time, leftover, w_sum, new_leaf, node, 0, 1)
             else:
-                if (node.weight < w): top = 1
-                elif (w == node.weight and w > 0): top = 2
-                else: top = 0
+                if (node.weight < w): leftover = 1
+                elif (w == node.weight and w > 0): leftover = 2
+                else: leftover = 0
 
-                new_node = self.Node(t, top, w_sum, node, new_leaf, 0, 1)
+                new_node = self.Node(t, leftover, w_sum, node, new_leaf, 0, 1)
 
             return new_node
 
@@ -70,9 +70,9 @@ class AVL:
         else:
             node.right = self._insert(node.right, t, v, w)
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        leftover_sum = node.left.leftover + node.right.weight
+        if (leftover_sum <= 0): node.leftover = 0
+        else: node.leftover = leftover_sum
 
         node.weight += w
         node.size = 1 + self._size(node.left) + self._size(node.right)
@@ -114,13 +114,13 @@ class AVL:
         node.weight = node.left.weight + node.right.weight
         node_tmp.weight = node_tmp.left.weight + node_tmp.right.weight
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        leftover_sum = node.left.leftover + node.right.weight
+        if (leftover_sum <= 0): node.leftover = 0
+        else: node.leftover = leftover_sum
 
-        top_sum = node_tmp.left.top + node_tmp.right.weight
-        if (top_sum <= 0): node_tmp.top = 0
-        else: node_tmp.top = top_sum
+        leftover_sum = node_tmp.left.leftover + node_tmp.right.weight
+        if (leftover_sum <= 0): node_tmp.leftover = 0
+        else: node_tmp.leftover = leftover_sum
 
         return node_tmp
 
@@ -140,13 +140,13 @@ class AVL:
         node.weight = node.left.weight + node.right.weight
         node_tmp.weight = node_tmp.left.weight + node_tmp.right.weight
 
-        top_sum = node.left.top + node.right.weight
-        if (top_sum <= 0): node.top = 0
-        else: node.top = top_sum
+        leftover_sum = node.left.leftover + node.right.weight
+        if (leftover_sum <= 0): node.leftover = 0
+        else: node.leftover = leftover_sum
 
-        top_sum = node_tmp.left.top + node_tmp.right.weight
-        if (top_sum <= 0): node_tmp.top = 0
-        else: node_tmp.top = top_sum
+        leftover_sum = node_tmp.left.leftover + node_tmp.right.weight
+        if (leftover_sum <= 0): node_tmp.leftover = 0
+        else: node_tmp.leftover = leftover_sum
 
         return node_tmp
 
@@ -155,7 +155,7 @@ class AVL:
             self.root = self._delete(self.root, t, w)
 
     def _delete (self, node, t, w):
-        if (node.leaf): return None
+        if (node.is_leaf): return None
 
         elif (t < node.min_right_time):
             node.left = self._delete(node.left, t, w)
@@ -164,9 +164,9 @@ class AVL:
                 node = node.right
             else:
                 node.weight -= w
-                top_sum = node.left.top + node.right.weight
-                if (top_sum <= 0): node.top = 0
-                else: node.top = top_sum
+                leftover_sum = node.left.leftover + node.right.weight
+                if (leftover_sum <= 0): node.leftover = 0
+                else: node.leftover = leftover_sum
         else:
             node.right = self._delete(node.right, t, w)
 
@@ -174,11 +174,11 @@ class AVL:
                 node = node.left
             else:
                 node.weight -= w
-                top_sum = node.left.top + node.right.weight
-                if (top_sum <= 0): node.top = 0
-                else: node.top = top_sum
+                leftover_sum = node.left.leftover + node.right.weight
+                if (leftover_sum <= 0): node.leftover = 0
+                else: node.leftover = leftover_sum
 
-        if (node.leaf):
+        if (node.is_leaf):
             return node
         else:
             if (node.min_right_time == t):
@@ -194,7 +194,7 @@ class AVL:
         return 0
 
     def _min (self, node):
-        if (node.leaf):
+        if (node.is_leaf):
             return node.time
 
         return self._min(node.left)
@@ -205,7 +205,7 @@ class AVL:
         return 0
 
     def _weight_count (self, node, t, counter):
-        if (node.leaf):
+        if (node.is_leaf):
             if (node.time <= t):
                 counter += node.weight
             return counter
@@ -214,7 +214,7 @@ class AVL:
             return self._weight_count(node.left, t, counter)
 
         else:
-            if (node.left.leaf):
+            if (node.left.is_leaf):
                 counter += node.left.weight
             else:
                 counter += node.left.weight
@@ -228,7 +228,7 @@ class AVL:
         return(kth)
 
     def _kth (self, node, t, k):
-        if (node.leaf):
+        if (node.is_leaf):
             if (node.weight == -1 or k != 1):
                 return [None, node.weight]
             else:
@@ -240,21 +240,21 @@ class AVL:
             kth_right = self._kth(node.right, t, k)
             if (kth_right[0] == None):
                 k -= kth_right[1]
-                if (node.left.top >= k):
-                    return [self.get_value(node.left, k)]
+                if (node.left.leftover >= k):
+                    return [self._get_value(node.left, k)]
                 else:
                     return [None, kth_right[1] + node.left.weight]
             else: return kth_right
 
-    def get_value (self, node, k):
-        if (node.leaf):
+    def _get_value (self, node, k):
+        if (node.is_leaf):
             return node.value
 
-        elif (node.right.top >= k):
-            return self.get_value(node.right, k)
+        elif (node.right.leftover >= k):
+            return self._get_value(node.right, k)
 
         else:
-            return self.get_value(node.left, k - node.right.weight)
+            return self._get_value(node.left, k - node.right.weight)
 
 
     def print (self):
@@ -264,11 +264,11 @@ class AVL:
     def _print (self, node, i):
         if (node == None): return
 
-        if (node.leaf):
+        if (node.is_leaf):
             print(i*' ' + 'leaf ' + str(node.time) + ' ' + str(node.value))
             return
 
         self._print(node.left, i+1)
         print(i*' ' + 'node ' + str(node.min_right_time) +
-                ' ' + str(node.weight) + ' ' + str(node.top))
+                ' ' + str(node.weight) + ' ' + str(node.leftover))
         self._print(node.right, i+1)

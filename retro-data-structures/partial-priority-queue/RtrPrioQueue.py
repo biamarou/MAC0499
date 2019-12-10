@@ -6,20 +6,21 @@ class RtrPrioQueue:
         self.q_now = _BST()
         self.updates = AVL()
 
-    def insert_insert (self, t, k):
+    def add_insert (self, t, k):
         value = self.updates.insert(t, k)
         self.q_now.insert(value)
 
-    def insert_deleteMin (self, t):
+    def add_deleteMin (self, t):
         value = self.updates.insert(t, None)
         self.q_now.delete(value)
 
-    def delete (self, t):
+    def remove_insert (self, t):
         value = self.updates.delete(t)
-        if (value[0]):
-            self.q_now.insert(value[1])
-        else:
-            self.q_now.delete(value[1])
+        self.q_now.delete(value[1])
+
+    def remove_deleteMin (self, t):
+        value = self.updates.delete(t)
+        self.q_now.insert(value[1])
 
     def query_min (self):
         min_key = self.q_now.min()
